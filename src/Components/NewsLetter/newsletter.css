@@ -16,7 +16,7 @@
 }
 
 .newsletter__subscribe {
-
+    display: grid;
 
     row-gap: .75rem;
 }
@@ -54,7 +54,9 @@
         padding: 4.5rem;
     }
 
-    .newsletter__subscribe {}
+    .newsletter__subscribe {
+        grid-template-columns: repeat(2, auto);
+    }
 
     .newsletter__input {
         width: 100%;

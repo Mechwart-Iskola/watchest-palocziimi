@@ -1,5 +1,6 @@
 import 'boxicons/css/boxicons.min.css';
 import './cart.css'
+import { useEffect, useState } from 'react';
 
 {/*A close ikonra kattintva zárja be a cartot */}
 
@@ -9,12 +10,27 @@ import './cart.css'
 
 {/*Ha nullára csökken a mennyiség nem kell eltünnie, de 0 alá ne menjen az értéke */}
 
+export type CartProps = {
+    open: boolean
+}
 
-const Cart = () => {
+const Cart = ({open}: CartProps) => {
+
+    const [showCart, setShowCart] = useState<boolean>(false);
+    const [amounts, setAmounts] = useState<number[]>([1, 1, 1]);
+    useEffect(() => {
+        setShowCart(open)
+    }, [open])
+
+    const setAmount = (index: number, plus: boolean) => {
+        const amountsList = [...amounts];
+        amountsList[index] += plus ? 1 : amountsList[index] == 0 ? 0 : -1;
+        setAmounts(amountsList);
+    }
   
     return (
-    <div className="cart" id="cart">
-    <i className='bx bx-x cart__close' id="cart-close"></i>
+    <div className={`cart ${showCart && "show-cart"}`} id="cart">
+    <i className='bx bx-x cart__close' id="cart-close" onClick={() => setShowCart(false)}></i>
 
     <h2 className="cart__title-center">My Cart</h2>
 
@@ -31,13 +47,13 @@ const Cart = () => {
                 <div className="cart__amount">
                     <div className="cart__amount-content">
                         <span className="cart__amount-box">
-                            <i className='bx bx-minus' ></i>
+                            <i className='bx bx-minus' onClick={() => setAmount(0, false)}></i>
                         </span>
 
-                        <span className="cart__amount-number">1</span>
+                        <span className="cart__amount-number">{amounts[0]}</span>
 
                         <span className="cart__amount-box">
-                            <i className='bx bx-plus' ></i>
+                            <i className='bx bx-plus' onClick={() => setAmount(0, true)}></i>
                         </span>
                     </div>
 
@@ -58,13 +74,13 @@ const Cart = () => {
                 <div className="cart__amount">
                     <div className="cart__amount-content">
                         <span className="cart__amount-box">
-                            <i className='bx bx-minus' ></i>
+                            <i className='bx bx-minus' onClick={() => setAmount(1, false)}></i>
                         </span>
 
-                        <span className="cart__amount-number">1</span>
+                        <span className="cart__amount-number">{amounts[1]}</span>
 
                         <span className="cart__amount-box">
-                            <i className='bx bx-plus' ></i>
+                            <i className='bx bx-plus' onClick={() => setAmount(1, true)}></i>
                         </span>
                     </div>
 
@@ -85,13 +101,13 @@ const Cart = () => {
                 <div className="cart__amount">
                     <div className="cart__amount-content">
                         <span className="cart__amount-box">
-                            <i className='bx bx-minus' ></i>
+                            <i className='bx bx-minus' onClick={() => setAmount(2, false)}></i>
                         </span>
 
-                        <span className="cart__amount-number">1</span>
+                        <span className="cart__amount-number">{amounts[2]}</span>
 
                         <span className="cart__amount-box">
-                            <i className='bx bx-plus' ></i>
+                            <i className='bx bx-plus' onClick={() => setAmount(2, true)}></i>
                         </span>
                     </div>
 
@@ -102,8 +118,8 @@ const Cart = () => {
     </div>
 
     <div className="cart__prices">
-        <span className="cart__prices-item">3 items</span>
-        <span className="cart__prices-total">$2880</span>
+        <span className="cart__prices-item">{amounts.reduce((a, b) => a+b, 0)} items</span>
+        <span className="cart__prices-total">${amounts[0] * 1050 + amounts[1] * 850 + amounts[2] * 980}</span>
     </div>
 </div>
   )
